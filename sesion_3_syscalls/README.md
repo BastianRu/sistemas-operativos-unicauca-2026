@@ -4,6 +4,7 @@
 
 - Juan Sebastian Muñoz Ruiz: <juanmunozr@unicauca.edu.co>
 - Juan Felipe Gallardo Orozco: <juanfelipegallardoorozco@gmail.com>  
+- Juan Pablo Medina Bolanios <juanmedinatm@unicauca.edu.co>
 
 ## Planteamiento del problema
 
@@ -27,9 +28,12 @@ $ echo ?
 4. Escribir un segundo programa que imprima el mismo texto dos veces: una
 con `printf` y otra con `write`, en ese orden, sin usar `fflush` ni terminar.
 
+5. Explicar en la bitácora por qué aparecen en ese orden. La respuesta tiene
+que ver con dónde queda el texto antes de llegar a la pantalla.
+
 ## Requerimentos previos
 
 - Instalar las dependencias necesarias:
 ```bash
-$ sudo apt install gcc make
+$ sudo apt install gcc make doxygen
 ```
