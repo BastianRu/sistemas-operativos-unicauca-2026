@@ -16,5 +16,5 @@ docs:
 	doxygen Doxyfile
 
 clean:
-	rm -f main.o main2.o syscalls syscalls2
+	rm -f main.o main2.o syscalls syscalls2 salida.txt
 	rm -rf docs
