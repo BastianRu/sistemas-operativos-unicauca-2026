@@ -3,7 +3,7 @@
 ## Integrantes
 
 - Juan Sebastian Muñoz Ruiz: <juanmunozr@unicauca.edu.co>
-- Juan Felipe Gallardo Orozco: <juanfelipegallardoorozco@gmail.com>  
+- Juan Felipe Gallardo Orozco: <juangallardo@unicauca.edu.co>  
 - Juan Pablo Medina Bolanios <juanmedinatm@unicauca.edu.co>
 
 ## Planteamiento del problema
