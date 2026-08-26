@@ -1,7 +1,7 @@
 /**
  * @file main2.c
  * @brief Imprime el mismo mensaje dos veces: primero con printf() y
- *        luego con write(), sin forzar el vaciado de buffers.
+ *        luego con write(), sin forzar el vaciado de buffers. Ni agregar saltos de linea.
  *
  * Este programa ilustra la diferencia entre la salida con buffer de la
  * biblioteca estándar de C (printf) y la escritura directa mediante la
@@ -22,7 +22,7 @@
  * @brief Punto de entrada del programa.
  *
  * Imprime el mismo mensaje primero con printf() y luego con write(),
- * en ese orden, sin forzar el vaciado de buffers.
+ * en ese orden, sin forzar el vaciado de buffers. Ni agregar salto de linea.
  *
  * Si write() falla, se informa el error mediante perror() y el programa
  * termina con un código de error.
@@ -35,16 +35,17 @@
  */
 int main(int argc, char *argv[]) {
 
-    char *msg_printf = "Mensaje enviado con printf\n";
-    char *msg_write  = "Mensaje enviado con write\n";
+    char *msg_printf = " 1. Esto es un texto con printf ";
+    char *msg_write  = " 2. Esto es un texto con write ";
 
     printf("%s", msg_printf);
 
     ssize_t wr = write(1, msg_write, strlen(msg_write));
+
     if (wr == -1) {
         perror("Ha habido un error en la llamada al sistema");
         return -1;
     }
 
-    return 0;
+    return 73;
 }
