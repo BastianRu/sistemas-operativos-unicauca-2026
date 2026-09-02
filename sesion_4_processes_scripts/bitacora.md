@@ -28,3 +28,16 @@ juanmunozr@DESKTOP-RM94QCM:~/os_unicauca_2026$ grep PPid /proc/2/status
 PPid:   1
 
 Consultando los procesos con $ ps -e el proceso con el id 1 se llama systemd.
+
+Punto 22: Despues de ejecutar el script y el programa infoproc, para el mismo programa, se comprobo que efectivamente las salidas de ambos entregan datos identicos. Sin embargo el proceso por el cual los obtienen es muy distinto. Incluso cuando la informacion se termina obteniendo del mismo archivo virtual en /proc.
+
+En el script de bash, se obtiene la informacion del archivo usando el comando grep que a fin de cuentas es un programa en C, que investigando, usa fork() para crear un proceso hijo y luego ese proceso hijo sobreescribe su propio codigo para correr el comando cat (que es para leer archivos enteros), proceso que se logra ejecutando el codigo del propio cat, guardado en /bin/cat, de manera que lee todo el archivo de status en /proc, despues se redirige su salida (que por defecto seria stdout a la pantalla) al padre, y este se encarga de procesar todo el archivo para entregar el patron solicitado. Despues se procesan los resultados de grep para cada caso con manipulacion de cadenas en bash. Finalmente se muestran por stdout con echo.
+
+En el programa en C, se usa open, read y close, que son llamadas al sistema, se solicita la lectura de /proc directamente al kernel, sin librerias de por medio, los datos que el kernel va entregando poco a poco al buffer en la RAM del programa. Despues se procesa la informacion del buffer manualmente para extraer la informacion que se busca y finalmente se muestra en pantalla. Entonces el programa en C es bastante mas directo que el script, porque el ejecutable interactua directamente con el kernel mediante llamadas al sistema.
+
+Punto 23: Corri $ python3 -c "import time; [time.sleep(0.05) or sum(range(1000000)) for _ in iter(int, 1)]" & 
+para obtener un proceso que altere su estado, su indentificador para el caso fue 16468 y procedi a ejecutar ./infoproc y ./infoproc.sh cuyas respuestas variaron de la una a la otra:
+
+Al usar un binario unico (como Python) en lugar de una subshell de Bash, /proc reporta directamente el nombre delejecutable activo y no bash. El proceso alterna entre running y suspension muchas veces por segundo. Dado que el Kernel genera el /proc status en tiempo real al leerlo, la minima diferencia de tiempo entre ambas ejecuciones hace que capturen estados distintos, esto se acentua porque el programa en C lee de forma instantanea mediante la llamada directa read(), mientras que el script en Bash añade algo de latencia al crear subprocesos intermediarios.
+
+Punto 24: Desde que presionas enter hasta que reaparece el prompt, el shell lee y analiza la cadena ingresada mediante read(), invoca la llamada al sistema fork() para duplicarse y crear un proceso hijo, y dentro de este hijo utiliza execve() para sobreescribirse con el programa solicitado (como en el grep). Mientras el ejecutable corre,el shell padre suspende su ejecucion bloqueandose en waitpid() a la espera de que el hijo finalice, una vez el kernel le avisa la terminacion, el shell recupera el control, toma el codigo de salida e imprime nuevamente el simbolo de espera en pantalla.

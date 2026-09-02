@@ -33,7 +33,6 @@ void imprimir_valor_campo(char *buffer, char *etiqueta, char *prefijo_salida) {
 int main(int argc, char *argv[]) {
     pid_t pid_objetivo;
 
-    printf("PID de este programa (getpid): %d\n", getpid());
 
     if (argc > 1) {
         pid_objetivo = atoi(argv[1]);
