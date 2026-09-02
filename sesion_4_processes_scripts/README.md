@@ -15,31 +15,31 @@ Este proyecto contiene la implementación en C (`infoproc.c`) y Bash (`infoproc.
 Compilar el programa en C y generar la documentación en un solo paso:
 ```bash
 $ make
-
+```
 ## Ejecutar los programas
 
-### Programa en C (PID actual o especificando PID)
+- Programa en C (PID actual o especificando PID)
 ```bash
 $ ./infoproc
 $ ./infoproc <PID>
-
-### Script en Bash (PID actual o especificando PID)
+```
+- Script en Bash (PID actual o especificando PID)
+```bash
 $ ./infoproc.sh
 $ ./infoproc.sh <PID>
+```
 
-### Script de conversion de archivos MKV
+-  Script de conversion de archivos MKV
 ```bash
 $ ./convertir.sh
 $ ./convertir.sh <DIR>
+```
 
-### Limpieza 
+- Limpieza
 ```bash
 $ make clean
-
-### Documentacion con Doxygen
+```
+- Documentacion con Doxygen
 ```bash
 $ doxygen Doxyfile
-
-
-
-
+```
