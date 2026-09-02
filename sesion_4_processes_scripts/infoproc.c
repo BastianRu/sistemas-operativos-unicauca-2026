@@ -1,3 +1,11 @@
+/**
+ * @file infoproc.c
+ * @brief Extracción de información de procesos en Linux leyendo /proc/[PID]/status mediante llamadas al sistema.
+ * @details Este programa accede al pseudofilesystem procfs utilizando exclusivamente llamadas a bajo nivel
+ *          (open, read, close) para extraer los campos Name, State, PPid y Threads de un proceso objetivo.
+ * @author Tu Nombre
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,8 +13,21 @@
 #include <string.h>
 #include <errno.h>
 
+/**
+ * @brief Tamaño máximo del buffer de lectura para almacenar el contenido de /proc/[PID]/status.
+ */
 #define TAMANO_BUFFER 4096
 
+/**
+ * @brief Busca una etiqueta específica en el buffer y muestra su valor asociado por salida estándar.
+ * 
+ * @details Realiza una búsqueda de subcadena en memoria sobre el contenido del archivo de estado,
+ *          omite tabuladores/espacios iniciales y extrae el valor hasta el siguiente salto de línea.
+ * 
+ * @param buffer Cadena de caracteres que contiene todo el texto leído de /proc/[PID]/status.
+ * @param etiqueta Clave del campo a buscar (ejemplo: "Name:", "State:", "PPid:", "Threads:").
+ * @param prefijo_salida Texto descriptivo impreso como prefijo del valor final extraído.
+ */
 void imprimir_valor_campo(char *buffer, char *etiqueta, char *prefijo_salida) {
     char *posicion = strstr(buffer, etiqueta);
     if (!posicion) {
@@ -30,9 +51,19 @@ void imprimir_valor_campo(char *buffer, char *etiqueta, char *prefijo_salida) {
     printf("%s %s\n", prefijo_salida, valor);
 }
 
+/**
+ * @brief Punto de entrada principal del programa infoproc.
+ * 
+ * @details Determina el PID objetivo (proporcionado por argv[1] o mediante getpid()),
+ *          construye la ruta /proc/[PID]/status y realiza la lectura del archivo a bajo
+ *          nivel empleando open, read y close con control de errores.
+ * 
+ * @param argc Cantidad de argumentos pasados desde la línea de comandos.
+ * @param argv Arreglo de cadenas de texto con los argumentos. argv[1] representa opcionalmente el PID a consultar.
+ * @return int Retorna 0 si la ejecución fue exitosa, 1 en errores de lectura/cierre o 2 si falla la apertura del archivo.
+ */
 int main(int argc, char *argv[]) {
     pid_t pid_objetivo;
-
 
     if (argc > 1) {
         pid_objetivo = atoi(argv[1]);
