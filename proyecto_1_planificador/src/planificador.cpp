@@ -43,7 +43,34 @@ std::string en_minusculas(std::string s) {
      * Mientras no este implementado, el proceso entra al final y SJF y SRT se
      * comportan como FIFO.
      */
-    cola.push_back(p);
+    if ( cola.size() == 0 ) {
+        cola.push_back(p);
+        return;
+    }
+
+   int pos = cola.size(); 
+
+    for (size_t i = 0; i < cola.size(); i++) {
+        if (p->restante < cola[i]->restante) {
+            pos = i;
+            break; 
+        }
+    }
+
+
+    if (pos == static_cast<int>(cola.size())) {
+        cola.push_back(p);
+        return;
+    }
+  
+    cola.push_back(cola.back());
+
+    for (int i = cola.size() - 2; i > pos; i--) {
+        cola[i] = cola[i - 1];
+    }
+
+
+    cola[pos] = p;
 }
 
 /**
