@@ -1,0 +1,23 @@
+# Caso propio: tres colas de prioridad, cada una con un algoritmo distinto.
+# Cola 1 (alta prioridad):  FIFO
+# Cola 2 (prioridad media): SRT
+# Cola 3 (baja prioridad):  RR con quantum 3
+define queues 3
+define scheduling 1 fifo
+define scheduling 2 srt
+define scheduling 3 rr
+define quantum 1 1
+define quantum 2 2
+define quantum 3 3
+
+process P1 0 5 1
+process P2 3 3 1
+
+process P3 0 6 2
+process P4 2 2 2
+process P5 4 4 2
+
+process P6 0 7 3
+process P7 5 3 3
+
+start

@@ -1,0 +1,17 @@
+# Caso propio (comparacion): los mismos siete procesos de caso_propio.txt,
+# pero repartidos en una unica cola FIFO en vez de en tres colas de prioridad.
+define queues 1
+define scheduling 1 fifo
+define quantum 1 1
+
+process P1 0 5 1
+process P2 3 3 1
+
+process P3 0 6 1
+process P4 2 2 1
+process P5 4 4 1
+
+process P6 0 7 1
+process P7 5 3 1
+
+start
