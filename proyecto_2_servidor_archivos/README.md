@@ -1,3 +1,7 @@
+* Estudiantes: 
+	- Juan Sebastian Muñoz Ruiz: juanmunozr@unicauca.edu.co
+	- Juan Felipe Gallardo Orozco: juangallardo@unicauca.edu.co
+
 # Planteamiento del problema
 
   Se deberá desarrollar dos programas en C que implementen la funcionalidad
