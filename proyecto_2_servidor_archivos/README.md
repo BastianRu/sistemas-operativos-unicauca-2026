@@ -1,3 +1,9 @@
+> **Nota sobre voz_video.mp3:** Grabe un video explicativo del código y de
+> la ejecución que debía incluir la pantalla, pero OBS no capturó la imagen y solo
+> grabó la voz. Por eso se adjunta únicamente el audio, convertido a mp3, en
+> [`voz_video.mp3`](voz_video.mp3) (duración aproximada: 1 h 11 min). En él se
+> explica el código y se describe la ejecución del servidor y del cliente.
+
 * Estudiantes: 
 
 	- Juan Sebastian Muñoz Ruiz: juanmunozr@unicauca.edu.co
