@@ -112,6 +112,22 @@ static int handle_request(client * c, request * req);
 volatile sig_atomic_t finished = 0;
 
 int main(int argc, char * argv[]) {
+    // puerto opcional por linea de comandos: ./server [puerto]
+    unsigned short port = DEFAULT_PORT;
+    if (argc > 2) {
+        fprintf(stderr, "Uso: %s [puerto]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+    if (argc == 2) {
+        char * end;
+        long p = strtol(argv[1], &end, 10);
+        if (*end != '\0' || p < 1 || p > 65535) {
+            fprintf(stderr, "Puerto invalido: %s\n", argv[1]);
+            return EXIT_FAILURE;
+        }
+        port = (unsigned short)p;
+    }
+
     // el manejador 
     struct sigaction sa;
     sa.sa_handler = sigint_handler;
@@ -149,7 +165,7 @@ int main(int argc, char * argv[]) {
 	memset(&addr, 0, sizeof(struct sockaddr_in));
 	//Asignar los atributos a la estructura
 	addr.sin_family = AF_INET; //Corresponde al tipo de socket (paso 1)
-	addr.sin_port = htons(1234); //TODO linea de comandos!
+	addr.sin_port = htons(port);
 	if (inet_aton("0.0.0.0", &addr.sin_addr) == 0) { //escuchar en la IP que me asignen
         fprintf(stderr, "Error: direccion IP invalida\n");
         close(s);
@@ -181,7 +197,7 @@ int main(int argc, char * argv[]) {
 	// para permitir la conexion con multiples clientes
 	while (!finished) {
 		// 4. Esperar por un cliente
-		printf("Esperando una conexion..\n");
+		printf("Esperando una conexion en el puerto %hu..\n", port);
 		addr_len = sizeof(client_addr); // accept lo usa como entrada y salida
 		c = accept(s, (struct sockaddr *)&client_addr, &addr_len);
 
