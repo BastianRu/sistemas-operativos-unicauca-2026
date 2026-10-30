@@ -20,4 +20,4 @@ doc:
 	doxygen
 
 clean:
-	-rm -rf docs *.o server client
+	-rm -rf docs *.o server client client_files files
