@@ -64,7 +64,7 @@ char * concat(char * str1, char * str2) {
 
 char * find_first_not_of(char * str, char * set) {
     char * str_ptr;
-    const char * set_ptr;
+    const char * set_ptr __attribute__((unused));
 
     if (str == NULL) {
 	   return NULL;
@@ -81,7 +81,7 @@ char * find_first_not_of(char * str, char * set) {
 
 char * find_first_of(char * str, char * set) {
     char * str_ptr;
-    const char * set_ptr;
+    const char * set_ptr __attribute__((unused));
 
     if (str == NULL) {
 	     return NULL;

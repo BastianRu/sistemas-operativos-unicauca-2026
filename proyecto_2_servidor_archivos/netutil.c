@@ -57,7 +57,9 @@ struct addrinfo * address_by_hostname(char * hostname, unsigned short port, int 
 
   struct addrinfo * res;
 
-  struct sockaddr_in * addr;
+  struct sockaddr_in * addr __attribute__((unused));
+
+  (void)port; // por ahora no se usa
 
   memset(&hints, 0, sizeof(struct addrinfo));
 
