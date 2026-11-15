@@ -32,6 +32,13 @@ tmpfs            819538     194   819344    1% /run/user/1000
 
 Ahora las columnas ya no muestran espacio si no informacion sobre inodos. Investigando me encuentro con que los inodos resultan ser estructuras de datos especiales del sistema operativo que guardan cierta informacion sobre los archivos y carpetas como los permisos, dueños, fechas y ubicacion, pero curiosamente no el nombre (tampoco el contenido pero pues es muy obvio el porque no), porque el inodo almacena los metadatos al archivo, y en Linux varios nombres pueden referenciar un mismo inodo, por lo que si lo guardara eso seria imposible. 
 
-Ahora bien, de antemano me causo curiosidad por que existen un numero limitado de inodes y que relacion tiene el numero con el espacio en disco
+Ahora bien, de antemano me causo curiosidad por que existen un numero limitado de inodes y que relacion tiene el numero con el espacio en disco.
+Indagando en la historia de los sistemas de archivos. Resulta ser que la estrategia que usan para facilitar la busqueda de un archivo en concreto, cuyo contenido sabemos que esta en alguna parte del disco, y quiza fragmentado, es asginar a cada contenido de archivo (o bloque), es decir los bytes reales, una estructura de datos que aporte la informacion de donde encontrarlo, el inode cumple esta funcion. Y existe una tabla ordenada de nodos, en la que cada elemento es facilmente ubicable mediante una operacion matematica simple. Ahora bien, cada nodo tiene un peso, por defecto 256 bytes, almacenados tambien en disco. Ahora, un nodo nuevo no se crea en el momento en el que se crea un archivo nuevo, el archivo se crea, y se le asigna un nodo ya existente, entonces surge la pregunta: Cuantos nodos existentes hay? Y por que hay los que hay? 
+
+Cuando se particiona un disco se crea un numero de inodos para el sistema de archivos de esa particion. La convencion y lo que mejor funciona para la mayoria de usuarios es: por cada 16KB de espacio en disco, se crea un nodo, si mi maquina por ejemplo tiene 1TB de almacenamiento, se crean 67,108,864 nodos cuando se formatea el disco. Es un numero al que se ha llegado de manera practica. Si quisieramos tener mas nodos disponibles para usar, tendriamos que reducir los bytes por nodo, por ejemplo si por cada 1KB de espacio crearamos 1 nodo, en un disco de 1TB, tan solo el espacio requerido para almacenar todos los nodos seria de 256 GB, es decir un cuarto de disco quedaria inutilizable para guardar contenido desde el principio. Con 16KB solo son ~16GB. 
+
+Entonces la respuesta a la pregunta es clara: Si mi sistema se queda sin inodos disponibles para asignar a archivos, no voy a poder guardar mas archivos. Incluso si el disco tiene espacio sin usar. 
+
+
 
 
