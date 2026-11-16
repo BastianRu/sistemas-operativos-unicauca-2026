@@ -59,6 +59,32 @@ total 12
 1182169 -rw-rw-r-- 1 bastian bastian    0 Nov 15 10:49 informar.c
 1182228 -rw-rw-r-- 1 bastian bastian 1679 Nov 14 17:21 README.md
 
+12 indica el total de espacio ocupado en disco medido en bloques de a 1KB. Como ya dijimos bitacora.c mide 4582 bytes, que son dos bloques de 4KB, es decir 8KB y el README es 1 bloque de 4KB. informar.c al momento de ejecutar el comando no tenia nada asi que mide 0 bytes. 8 + 4 + 0 = 12.
+
+Tambien se muestran los inodos correspondientes a cada archivo. Los permisos. La cantidad de links hard asociados al inodo. El propietario, el grupo, y fecha de ultima modificacion. 
+
+Segunda Parte: Enlances
+
+4. Al crear archivo.txt y enlazarlo, liste con `ls -li archivo.txt duro.txt simbolico.txt`, obteniendo:
+
+1182216 -rw-rw-r-- 2 bastian bastian 36 Nov 16 15:52 archivo.txt
+1182216 -rw-rw-r-- 2 bastian bastian 36 Nov 16 15:52 duro.txt
+1186714 lrwxrwxrwx 1 bastian bastian 11 Nov 16 15:54 simbolico.txt -> archivo.txt
+
+5. El enlace duro comparte el mismo identificador del nodo de archivo.txt. Mientras que el simbolico tiene uno nuevo. Tambien, ahora archivo.txt tiene dos enlaces, dos cosas que apuntan a los datos. El simbolico solo tiene uno, que es el mismo nombre suyo.
+
+6. Al ejecutar `rm archivo.txt`, y listar se obtiene:
+
+1182216 -rw-rw-r-- 1 bastian bastian 36 Nov 16 15:52 duro.txt
+1186714 lrwxrwxrwx 1 bastian bastian 11 Nov 16 15:54 simbolico.txt -> archivo.txt
+
+Con `simbolico.txt -> archivo.txt` resaltado en rojo. Vemos como duro.txt ahora solo tiene un enlace. Pero su contenido sigue siendo accesible con `cat`, lo que no ocurre con simbolico.txt, que arroja `No such file or directory`. Esto se debe a que contenido al que el enlace apuntaba ya dejo de existir, asi que ahora es huerfano. Por eso no imprime nada con cat. Algo curioso es que cuando volvi a crear el archivo.txt, le escribi un contenido diferente al del primero, y ejecute `cat simbilico.txt`, se mostro el contenido del archivo.txt nuevo. Osea que el enlace mira el nombre nada mas, no los bloques de bytes en disco directamente.
+
+7. Cuando se crea una particion, cada particion tiene su propio sistema de archivos, asi que entre particiones pueden haber diferentes sistemas de archivos. Cuando se formatea la misma, esta calcula su numero de inodos de acuerdo a lo que explique antes. Eso significa que los inodos no se comparten entre particiones, entonces si por ejemplo tengo dos particiones de tamaños suficientes, el inodo 1182216 de la particion A puede contener algo completamente distinto al inodo 1182216 de la particion B. Entonces si el sistema operativo permitiera crear un enlace duro en la particion A pero con la intencion de apuntar al nodo de la particion B, el sistema de archivos buscaria en su propia tabla el nodo 1182216 de la particion A, y no el de la B, por lo que el contenido al que apunta no seria el que esperas. 
+
+El enlace simbolico no referencia un nodo si no una cadena de texto que contiene una ruta (que es donde pertenece el archivo independientemete de las particiones que existan), si el enlace de la paticion A apunta al un archivo en la B, realmente lo que contiene A es la ruta absoluta hacia donde esta ubicado B. El Virtual File System de Linux lee la primera parte de esa ruta y la asocia al directorio base de la particion B, y despues le pide al sistema de archivos de la particion B que busque el archivo en concreto. Es pura logica de resolucion de rutas. Fascinante
+
+Tercera parte: Desde un programa
 
 
 
