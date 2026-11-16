@@ -39,6 +39,26 @@ Cuando se particiona un disco se crea un numero de inodos para el sistema de arc
 
 Entonces la respuesta a la pregunta es clara: Si mi sistema se queda sin inodos disponibles para asignar a archivos, no voy a poder guardar mas archivos. Incluso si el disco tiene espacio sin usar. 
 
+3. Al correr `stat bitacora.md` se obtuvo:
+
+File: bitacora.md
+Size: 4582      	Blocks: 16         IO Block: 4096   regular file
+Device: 259,6	Inode: 1182195     Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/ bastian)   Gid: ( 1000/ bastian)
+Access: 2026-11-15 20:19:47.087785853 -0500
+Modify: 2026-11-15 20:19:47.082759822 -0500
+Change: 2026-11-15 20:19:47.082785651 -0500
+Birth: 2026-11-15 20:19:47.082759822 -0500
+
+Vemos como el archivo de la bitacora pesa 4582 bytes, guardados en 16 bloques del disco de 512 bytes cada uno. Bloques completos de 4096 bytes. Es un archivo regular. El dispositivo de almacenamiento en el que esta guardado es el del id 256, particion 6, el Inodo asignado es el 1182195, tiene solo un link duro, que es el mismo nombre. El acceso es de lectura y escritura para mi usuario (bastian) y para submiembros del grupo, para otros es solo de lectura. Mi user id es 1000, group id tambien 1000, el estandar de Ubuntu para nuevos usuarios. Luego estan los timestamps. Ultimo acceso al archivo (lectura), ultima modificacion, ultima modificacion de los metadatos, y fecha de creacion.
+
+Al correr `ls -li` se obtiene:
+
+total 12
+1182195 -rw-rw-r-- 1 bastian bastian 4582 Nov 15 20:19 bitacora.md
+1182169 -rw-rw-r-- 1 bastian bastian    0 Nov 15 10:49 informar.c
+1182228 -rw-rw-r-- 1 bastian bastian 1679 Nov 14 17:21 README.md
+
 
 
 
