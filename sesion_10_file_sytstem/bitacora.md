@@ -86,5 +86,44 @@ El enlace simbolico no referencia un nodo si no una cadena de texto que contiene
 
 Tercera parte: Desde un programa
 
+9. Corri `./informar` sobre `archivo.txt` (el nuevo, el que cree despues de borrar el original), sobre `.` (el directorio donde estan todos, porque no habia ningun subdirectorio en la carpeta) y sobre `simbolico.txt`:
+
+Archivo: archivo.txt
+Tamaño: 24 bytes
+Tipo de archivo: Archivo regular
+Permisos: rw-rw-r--
+Contador de enlaces duros: 1
+ultima modificacion: 2026-11-16 16:15:10
+
+Archivo: .
+Tamaño: 4096 bytes
+Tipo de archivo: Directorio
+Permisos: rwxrwxr-x
+Contador de enlaces duros: 2
+ultima modificacion: 2026-11-17 19:10:59
+
+Archivo: simbolico.txt
+Tamaño: 11 bytes
+Tipo de archivo: Enlace simbolico
+Permisos: rwxrwxrwx
+Contador de enlaces duros: 1
+ultima modificacion: 2026-11-16 15:54:03
+
+Lo primero que hay que decir es que el programa usa `lstat` y no `stat`. La diferencia es que `stat` sigue los enlaces simbolicos y devuelve los metadatos del archivo al que apunta, mientras que `lstat` devuelve los del enlace en si. Si hubiera usado `stat`, la tercera salida seria identica a la primera (24 bytes, archivo regular), y no habria forma de enterarse de que simbolico.txt es un enlace. Con `lstat` si se ve la diferencia, y eso conecta con lo que ya habia visto en el punto 6: el enlace simbolico es su propio objeto, con su propio inodo (1186714), distinto al de archivo.txt.
+
+Diferencias que encontre:
+
+- **Tamaño.** Del archivo regular son 24 bytes, que es justo lo que mide "Soy un nuevo archivo :)" mas el salto de linea. En el enlace son 11 bytes, que no tiene nada que ver con el contenido del archivo al que apunta: son los caracteres de la cadena `archivo.txt` (11 letras), porque como dije en el punto 7 el enlace simbolico guarda una ruta y nada mas. En el directorio son 4096, un bloque completo, porque un directorio es un archivo especial cuyo contenido es la tabla de pares nombre -> inodo, y ocupa minimo un bloque aunque tenga pocas entradas. No es la suma del tamaño de lo que hay dentro.
+
+- **Tipo.** Aqui es donde `S_ISREG`, `S_ISDIR` y `S_ISLNK` se separan. El tipo no se guarda como un campo aparte sino dentro de los mismos bits de `st_mode` que contienen los permisos, y las macros extraen esa parte.
+
+- **Permisos.** El directorio tiene `x` y el archivo regular no. En un directorio la `x` no significa ejecutar, significa poder entrar o atravesarlo (acceder a las entradas por nombre), por eso aparece con 775. Lo mas raro es el enlace simbolico con `rwxrwxrwx`. Al parecer en Linux los permisos de un enlace simbolico no se usan para nada: siempre aparecen asi, y cuando se abre el enlace los permisos que cuentan son los del archivo destino. Es decir que ese 777 no significa que cualquiera pueda hacer lo que quiera.
+
+- **Contador de enlaces duros.** El archivo y el enlace simbolico tienen 1, cada uno con su unico nombre (el enlace simbolico no aumenta el contador del archivo al que apunta, tal como vi en el punto 5). El directorio tiene 2 y no 1: uno es su nombre en la carpeta de arriba (`sesion_10_file_sytstem`) y el otro es su propia entrada `.` desde adentro. Si tuviera subdirectorios, cada uno sumaria uno mas por su entrada `..`.
+
+- **Ultima modificacion.** En el archivo es cuando le escribi el contenido (16:15), en el enlace es cuando lo cree (15:54), porque lstat no mira el archivo destino, y a diferencia del archivo el enlace nunca cambia. En el directorio la fecha es la mas reciente de las tres porque `mtime` de un directorio cambia cada vez que se agrega, borra o renombra una entrada, no cuando cambia el contenido de los archivos de adentro. Es de hoy a las 19:10 porque fue cuando compile `informar` y aparecio el ejecutable nuevo en la carpeta.
+
+Tambien probe un nombre que no existe y el programa muestra el error de `perror` y sale con `EXIT_FAILURE`, que es el camino de `lstat` devolviendo -1.
+
 
 
